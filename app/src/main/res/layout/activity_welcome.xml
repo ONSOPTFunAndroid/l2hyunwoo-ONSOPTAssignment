@@ -6,7 +6,7 @@
     <data>
         <variable
             name="welcomeViewModel"
-            type ="com.example.onsoptfirstassignment.detail.viewmodel.WelcomeViewModel"/>
+            type="com.example.onsoptfirstassignment.detail.viewmodel.WelcomeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,15 +18,26 @@
             android:id="@+id/tv_welcome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
             android:text="@={welcomeViewModel.welcomeText}"
             android:textAlignment="center"
             android:textColor="#000000"
             android:textSize="40sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="이현우의 프로젝트" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview_project"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_welcome"
+            tools:listitem="@layout/item_project" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
