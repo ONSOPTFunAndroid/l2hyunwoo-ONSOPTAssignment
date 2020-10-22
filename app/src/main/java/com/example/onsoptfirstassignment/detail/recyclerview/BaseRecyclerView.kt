@@ -1,5 +1,6 @@
 package com.example.onsoptfirstassignment.detail.recyclerview
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
@@ -51,6 +52,8 @@ abstract class BaseRecyclerView {
         fun onBindViewHolder(item: Any?) {
             try {
                 bindingVariableId?.let {
+                    Log.d("Welcome", "$it")
+                    Log.d("Welcome", "$item")
                     binding.setVariable(it, item)
                 }
             } catch (e: Exception) {
