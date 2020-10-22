@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme"
         android:name=".preference.LoginApplication"
         >
-        <activity android:name=".detail.view.WelcomeActivity"></activity>
+        <activity android:name=".detail.view.WelcomeActivity" />
         <activity android:name=".signup.view.SignUpActivity" />
         <activity android:name=".main.view.MainActivity">
             <intent-filter>
