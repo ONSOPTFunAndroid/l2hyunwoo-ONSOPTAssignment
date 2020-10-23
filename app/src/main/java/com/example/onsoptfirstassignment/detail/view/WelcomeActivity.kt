@@ -20,16 +20,12 @@ class WelcomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("Welcome", "1")
         binding = ActivityWelcomeBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
-        Log.d("Welcome", "1")
         binding.welcomeViewModel = welcomeViewModel
-        Log.d("Welcome", "2")
         binding.lifecycleOwner = this
-        Log.d("Welcome", "3")
         binding.recyclerviewProject.adapter = object : BaseRecyclerView.BaseAdapter<ProjectData, ItemProjectBinding>(
             layoutResId = R.layout.item_project,
             bindingVariableId = BR.projectdata
