@@ -1,5 +1,15 @@
-# ✨ON SOPT✨ Assignment
-ON SOPT(27기 SOPT) 안드로이드 파트 필수 과제/성장 과제 제출 Repository입니다.
+# Welcome To ✨ON SOPT✨ Android
+<img src="https://user-images.githubusercontent.com/54518925/97086165-ab334b80-165c-11eb-962f-0ef65a9fa034.png"/>
+ON SOPT 안드로이드 파트 필수/성장 과제 Repository입니다.
+저는 세미나 내용뿐만 아니라 제가 배워가는 내용을 기반으로 과제를 수행합니다.
+
+## What Did You Use?
+- Constraint/LinearLayout
+- ViewModel
+- LiveData
+- Data Binding
+- SharedPreference
+- RecyclerView
 
 ## 1주차 과제
 ### 종료 시점
