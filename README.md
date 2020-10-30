@@ -213,7 +213,7 @@ class ItemTouchHelperCallback(private val context : Context,
 ```
 
 **class ProjectAdapter**
-아이템들이 이동한 것, 삭제된 
+<br>아이템들이 이동한 것, 삭제된 결과를 Adapter 내의 List에 반영</br>
 ```
 override fun onItemMove(from: Int, to: Int): Boolean {
         if(from < to) {
