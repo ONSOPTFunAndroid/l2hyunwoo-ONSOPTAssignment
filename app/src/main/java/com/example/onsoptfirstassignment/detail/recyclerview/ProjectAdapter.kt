@@ -6,8 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.onsoptfirstassignment.R
 import com.example.onsoptfirstassignment.detail.model.ProjectData
+import java.util.*
 
-class ProjectAdapter(private val context : Context) : RecyclerView.Adapter<ProjectViewHolder>() {
+class ProjectAdapter(private val context : Context) : RecyclerView.Adapter<ProjectViewHolder>(), ItemTouchHelperAdapter {
 
     var datas = mutableListOf<ProjectData>()
 
@@ -21,5 +22,28 @@ class ProjectAdapter(private val context : Context) : RecyclerView.Adapter<Proje
     }
 
     override fun getItemCount(): Int = datas.size
+
+    override fun onItemMove(from: Int, to: Int): Boolean {
+        if(from < to) {
+            for(i in from until to) {
+                Collections.swap(datas, i, i+1)
+            }
+        } else {
+            for(i in from downTo (to+1)) {
+                Collections.swap(datas, i, i-1)
+            }
+        }
+        notifyItemMoved(from, to)
+        return true
+    }
+
+    override fun onItemDismiss(position: Int) {
+        datas.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    fun changeLayout(isLinearLayout: Boolean) {
+
+    }
 
 }

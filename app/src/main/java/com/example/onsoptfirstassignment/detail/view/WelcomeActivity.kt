@@ -5,17 +5,23 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.onsoptfirstassignment.R
 import com.example.onsoptfirstassignment.databinding.ActivityWelcomeBinding
 import com.example.onsoptfirstassignment.detail.model.ProjectData
 import com.example.onsoptfirstassignment.detail.recyclerview.BaseRecyclerView
+import com.example.onsoptfirstassignment.detail.recyclerview.ItemTouchHelperCallback
+import com.example.onsoptfirstassignment.detail.recyclerview.OnStartDragListener
 import com.example.onsoptfirstassignment.detail.recyclerview.ProjectAdapter
 import com.example.onsoptfirstassignment.detail.viewmodel.WelcomeViewModel
 
-class WelcomeActivity : AppCompatActivity() {
+class WelcomeActivity : AppCompatActivity(), OnStartDragListener {
     private val welcomeViewModel: WelcomeViewModel by viewModels()
     private lateinit var binding: ActivityWelcomeBinding
+    private lateinit var touchHelper : ItemTouchHelper
     var data = mutableListOf<ProjectData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,25 +37,33 @@ class WelcomeActivity : AppCompatActivity() {
         addData()
         adapter.datas = data
         adapter.notifyDataSetChanged()
-        binding.recyclerviewProject.adapter = adapter
+        binding.recyclerviewProject.apply {
+            setAdapter(adapter)
+            layoutManager = LinearLayoutManager(applicationContext)
+            setHasFixedSize(true)
+        }
+        val callback = ItemTouchHelperCallback(applicationContext, adapter)
+        touchHelper = ItemTouchHelper(callback)
+        touchHelper.attachToRecyclerView(binding.recyclerviewProject)
 
-        welcomeViewModel.floatingButtonClickListener.observe(this, {
-            if(it) {
-                welcomeViewModel.isLinearLayout.value?.let { isLinearLayout ->
-                    changeLayout(isLinearLayout)
-                }
-                "레이아웃 변경".toast()
-                welcomeViewModel.setFloatingButtonClickEventFalse()
-            }
-        })
+//        welcomeViewModel.floatingButtonClickListener.observe(this, {
+//            if(it) {
+//                if(binding.recyclerviewProject.layoutManager == LinearLayoutManager(applicationContext))
+//                    binding.recyclerviewProject.layoutManager = GridLayoutManager(applicationContext, 3)
+//                else
+//                    binding.recyclerviewProject.layoutManager = LinearLayoutManager(applicationContext)
+//                "레이아웃 변경".toast()
+//                welcomeViewModel.setFloatingButtonClickEventFalse()
+//            }
+//        })
 
-        welcomeViewModel.isLinearLayout.observe(this, { isLinearLayout ->
-            if(isLinearLayout) {
-
-            } else {
-
-            }
-        })
+//        welcomeViewModel.isLinearLayout.observe(this, { isLinearLayout ->
+//            if(isLinearLayout) {
+//
+//            } else {
+//
+//            }
+//        })
     }
 
     private fun addData() {
@@ -99,6 +113,94 @@ class WelcomeActivity : AppCompatActivity() {
                             "3주간의 인텐시브 트레이닝으로 코틀린 격파"
                 )
             )
+            add(
+                ProjectData(
+                    img_portfolio = R.drawable.kotlin,
+                    txt_title = "안드로이드 Kotlin 스터디",
+                    txt_explain = "처음 안드로이드를 접한 OB들의 초보 탈출기 " +
+                            "3주간의 인텐시브 트레이닝으로 코틀린 격파"
+                )
+            )
+            add(
+                ProjectData(
+                    img_portfolio = R.drawable.kotlin,
+                    txt_title = "안드로이드 Kotlin 스터디",
+                    txt_explain = "처음 안드로이드를 접한 OB들의 초보 탈출기 " +
+                            "3주간의 인텐시브 트레이닝으로 코틀린 격파"
+                )
+            )
+            add(
+                ProjectData(
+                    img_portfolio = R.drawable.kotlin,
+                    txt_title = "안드로이드 Kotlin 스터디",
+                    txt_explain = "처음 안드로이드를 접한 OB들의 초보 탈출기 " +
+                            "3주간의 인텐시브 트레이닝으로 코틀린 격파"
+                )
+            )
+            add(
+                ProjectData(
+                    img_portfolio = R.drawable.kotlin,
+                    txt_title = "안드로이드 Kotlin 스터디",
+                    txt_explain = "처음 안드로이드를 접한 OB들의 초보 탈출기 " +
+                            "3주간의 인텐시브 트레이닝으로 코틀린 격파"
+                )
+            )
+            add(
+                ProjectData(
+                    img_portfolio = R.drawable.kotlin,
+                    txt_title = "안드로이드 Kotlin 스터디",
+                    txt_explain = "처음 안드로이드를 접한 OB들의 초보 탈출기 " +
+                            "3주간의 인텐시브 트레이닝으로 코틀린 격파"
+                )
+            )
+            add(
+                ProjectData(
+                    img_portfolio = R.drawable.kotlin,
+                    txt_title = "안드로이드 Kotlin 스터디",
+                    txt_explain = "처음 안드로이드를 접한 OB들의 초보 탈출기 " +
+                            "3주간의 인텐시브 트레이닝으로 코틀린 격파"
+                )
+            )
+            add(
+                ProjectData(
+                    img_portfolio = R.drawable.kotlin,
+                    txt_title = "안드로이드 Kotlin 스터디",
+                    txt_explain = "처음 안드로이드를 접한 OB들의 초보 탈출기 " +
+                            "3주간의 인텐시브 트레이닝으로 코틀린 격파"
+                )
+            )
+            add(
+                ProjectData(
+                    img_portfolio = R.drawable.kotlin,
+                    txt_title = "안드로이드 Kotlin 스터디",
+                    txt_explain = "처음 안드로이드를 접한 OB들의 초보 탈출기 " +
+                            "3주간의 인텐시브 트레이닝으로 코틀린 격파"
+                )
+            )
+            add(
+                ProjectData(
+                    img_portfolio = R.drawable.kotlin,
+                    txt_title = "안드로이드 Kotlin 스터디",
+                    txt_explain = "처음 안드로이드를 접한 OB들의 초보 탈출기 " +
+                            "3주간의 인텐시브 트레이닝으로 코틀린 격파"
+                )
+            )
+            add(
+                ProjectData(
+                    img_portfolio = R.drawable.kotlin,
+                    txt_title = "안드로이드 Kotlin 스터디",
+                    txt_explain = "처음 안드로이드를 접한 OB들의 초보 탈출기 " +
+                            "3주간의 인텐시브 트레이닝으로 코틀린 격파"
+                )
+            )
+            add(
+                ProjectData(
+                    img_portfolio = R.drawable.kotlin,
+                    txt_title = "안드로이드 Kotlin 스터디",
+                    txt_explain = "처음 안드로이드를 접한 OB들의 초보 탈출기 " +
+                            "3주간의 인텐시브 트레이닝으로 코틀린 격파"
+                )
+            )
         }
     }
 
@@ -124,5 +226,9 @@ class WelcomeActivity : AppCompatActivity() {
                 notifyDataSetChanged()
             }
         }
+    }
+
+    override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
+        touchHelper.startDrag(viewHolder)
     }
 }
