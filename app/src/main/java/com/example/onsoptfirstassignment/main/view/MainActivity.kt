@@ -26,19 +26,26 @@ class MainActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
 
         activityViewModel.isRegisterClicked.observe(this, {
-            if (it) {
-                transferActivityForResult(SignUpActivity::class.java)
-                activityViewModel.setRegisterClickedFalse()
-            }
+            registerButtonClickListener(it)
         })
 
         activityViewModel.isSignIn.observe(this, {
-            if (it) {
-                loginStart()
-                activityViewModel.setSignInFalse()
-            }
+            signInButtonClickListener(it)
         })
+    }
 
+    private fun signInButtonClickListener(isSignIn: Boolean) {
+        if (isSignIn) {
+            loginStart()
+            activityViewModel.setSignInFalse()
+        }
+    }
+
+    private fun registerButtonClickListener(isRegisterClicked: Boolean) {
+        if (isRegisterClicked) {
+            transferActivityForResult(SignUpActivity::class.java)
+            activityViewModel.setRegisterClickedFalse()
+        }
     }
 
     private fun loginProcess() {
@@ -46,6 +53,7 @@ class MainActivity : AppCompatActivity() {
             activityViewModel.setAutoLoginInfo()
             "로그인 성공".toast()
             transferActivity(WelcomeActivity::class.java)
+            finish()
         } else {
             "회원정보가 잘못되었습니다 다시 하세요".toast()
         }
