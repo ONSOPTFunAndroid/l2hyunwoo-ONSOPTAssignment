@@ -85,6 +85,7 @@ class MainActivity : AppCompatActivity() {
     private fun autoRegister() {
         "자동 로그인 성공".toast()
         transferActivity(WelcomeActivity::class.java)
+        finish()
     }
 
     private fun transferActivityForResult(className: Class<*>) {

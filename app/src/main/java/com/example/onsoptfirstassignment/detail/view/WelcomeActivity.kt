@@ -1,6 +1,7 @@
 package com.example.onsoptfirstassignment.detail.view
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -21,8 +22,9 @@ import com.example.onsoptfirstassignment.detail.viewmodel.WelcomeViewModel
 class WelcomeActivity : AppCompatActivity(), OnStartDragListener {
     private val welcomeViewModel: WelcomeViewModel by viewModels()
     private lateinit var binding: ActivityWelcomeBinding
-    private lateinit var touchHelper : ItemTouchHelper
+    private lateinit var touchHelper: ItemTouchHelper
     var data = mutableListOf<ProjectData>()
+    private lateinit var mAdapter: ProjectAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,37 +35,49 @@ class WelcomeActivity : AppCompatActivity(), OnStartDragListener {
         binding.welcomeViewModel = welcomeViewModel
         binding.lifecycleOwner = this
 
-        val adapter = ProjectAdapter(this)
+        mAdapter = ProjectAdapter(context = applicationContext, ProjectAdapter.LINEAR)
         addData()
-        adapter.datas = data
-        adapter.notifyDataSetChanged()
         binding.recyclerviewProject.apply {
-            setAdapter(adapter)
-            layoutManager = LinearLayoutManager(applicationContext)
+            layoutManager = LinearLayoutManager(context)
+            adapter = mAdapter
+            mAdapter.datas = data
+            mAdapter.notifyDataSetChanged()
             setHasFixedSize(true)
         }
+        attachItemTouchHelper(mAdapter)
+
+        welcomeViewModel.floatingButtonClickListener.observe(this, {
+            if (it) {
+                if(binding.recyclerviewProject.layoutManager is GridLayoutManager) {
+                    Log.d("Welcome", "here2")
+                    mAdapter.datas.clear()
+                    mAdapter.setLinearLayout()
+                    mAdapter.datas = data
+                    addData()
+                    binding.recyclerviewProject.layoutManager = LinearLayoutManager(applicationContext)
+                    binding.recyclerviewProject.adapter = mAdapter
+                    mAdapter.notifyDataSetChanged()
+                }
+                else if (binding.recyclerviewProject.layoutManager is LinearLayoutManager) {
+                    Log.d("Welcome", "here1")
+                    mAdapter.datas.clear()
+                    mAdapter.setGridLayout()
+                    mAdapter.datas = data
+                    addData()
+                    binding.recyclerviewProject.layoutManager = GridLayoutManager(applicationContext, 2)
+                    binding.recyclerviewProject.adapter = mAdapter
+                    mAdapter.notifyDataSetChanged()
+                }
+                "레이아웃 변경".toast()
+                welcomeViewModel.setFloatingButtonClickEventFalse()
+            }
+        })
+    }
+
+    private fun attachItemTouchHelper(adapter: ProjectAdapter) {
         val callback = ItemTouchHelperCallback(applicationContext, adapter)
         touchHelper = ItemTouchHelper(callback)
         touchHelper.attachToRecyclerView(binding.recyclerviewProject)
-
-//        welcomeViewModel.floatingButtonClickListener.observe(this, {
-//            if(it) {
-//                if(binding.recyclerviewProject.layoutManager == LinearLayoutManager(applicationContext))
-//                    binding.recyclerviewProject.layoutManager = GridLayoutManager(applicationContext, 3)
-//                else
-//                    binding.recyclerviewProject.layoutManager = LinearLayoutManager(applicationContext)
-//                "레이아웃 변경".toast()
-//                welcomeViewModel.setFloatingButtonClickEventFalse()
-//            }
-//        })
-
-//        welcomeViewModel.isLinearLayout.observe(this, { isLinearLayout ->
-//            if(isLinearLayout) {
-//
-//            } else {
-//
-//            }
-//        })
     }
 
     private fun addData() {
@@ -201,14 +215,6 @@ class WelcomeActivity : AppCompatActivity(), OnStartDragListener {
                             "3주간의 인텐시브 트레이닝으로 코틀린 격파"
                 )
             )
-        }
-    }
-
-    private fun changeLayout(isLinearLayout : Boolean) {
-        if(isLinearLayout) {
-            welcomeViewModel.linearToGrid()
-        } else {
-            welcomeViewModel.gridToLinear()
         }
     }
 

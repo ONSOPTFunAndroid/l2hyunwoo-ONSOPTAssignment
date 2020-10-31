@@ -23,7 +23,7 @@ class ItemTouchHelperCallback(private val context : Context,
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
     ): Int {
-        if(recyclerView.layoutManager == GridLayoutManager(context, 3)) {
+        if(recyclerView.layoutManager is GridLayoutManager) {
             val dragFlags =
                 ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
             val swipeFlags = 0
