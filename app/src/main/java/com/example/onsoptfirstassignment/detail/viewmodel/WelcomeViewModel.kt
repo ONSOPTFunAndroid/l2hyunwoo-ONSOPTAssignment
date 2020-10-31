@@ -30,9 +30,7 @@ class WelcomeViewModel : ViewModel() {
     }
 
     private fun setText() {
-        val myId = LoginPreference.myId
-        val setWelcomeText = myId + "님\n어서오세요"
-        welcomeText.set(setWelcomeText)
+        welcomeText.set(LoginPreference.myId)
     }
 
     fun floatingButtonClicked() {
