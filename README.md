@@ -236,9 +236,9 @@ override fun onItemMove(from: Int, to: Int): Boolean {
     }
 ```
 
-## 2주차 과제
+## 3주차 과제
 ### 종료 시점
-2020/10/30 (금)
+2020/11/1 ()
 
 ### 화면 캡쳐
 <img src = "https://user-images.githubusercontent.com/54518925/98372750-98b80980-2081-11eb-9218-18a7b25adcc9.gif" width = 40%/>
