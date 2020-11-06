@@ -10,6 +10,7 @@ ON SOPT 안드로이드 파트 필수/성장 과제 Repository입니다.
 - Data Binding
 - SharedPreference
 - RecyclerView
+- ViewPager2
 
 ## 1주차 과제
 ### 종료 시점
@@ -233,4 +234,174 @@ override fun onItemMove(from: Int, to: Int): Boolean {
         datas.removeAt(position)
         notifyItemRemoved(position)
     }
+```
+
+## 2주차 과제
+### 종료 시점
+2020/10/30 (금)
+
+### 화면 캡쳐
+<img src = "https://user-images.githubusercontent.com/54518925/98372750-98b80980-2081-11eb-9218-18a7b25adcc9.gif" width = 40%/>
+
+### 주요 변경 사항
+<img src = "https://user-images.githubusercontent.com/54518925/98372967-e6cd0d00-2081-11eb-85da-d335db532017.png" width = 40%/>
+- Activity에서 Fragment로 뷰 변경
+- Fragment로 뷰가 변함에 따라 ViewModel, DataBinding 방식도 변경
+**SearchFragment.kt**
+```
+class SearchFragment : Fragment() {
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val binding: FragmentSearchBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
+        return binding.root
+    }
+}
+```
+
+**ProjectFragment.kt**
+```
+class ProjectFragment : Fragment(), OnStartDragListener {
+    private val welcomeViewModel : WelcomeViewModel by activityViewModels()
+    private lateinit var projectBinding: FragmentProjectBinding
+    private lateinit var mAdapter: ProjectAdapter
+    private lateinit var touchHelper: ItemTouchHelper
+    var data = mutableListOf<ProjectData>()
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        projectBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_project, container, false)
+        projectBinding.welcomeViewModel = welcomeViewModel
+        projectBinding.lifecycleOwner = viewLifecycleOwner
+        return projectBinding.root
+    }
+}
+```
+
+- 지난번에 미완성한 2주차 성장과제 완료/3주차 필수과제 완료
+
+### 주요 코드
+- **ViewPager2**(ViewPager 대신 ViewPager2로 구현)
+FragmentStateAdapter를 상속받는 MainViewPagerAdapter를 만들고 이를 ViewPager2에 부착
+
+**MainViewPagerAdapter.kt**
+```
+class MainViewPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
+    // 전체 페이지 수
+    override fun getItemCount(): Int = 3
+    // 해당 위치에 맞는 Fragment 생성
+    override fun createFragment(position: Int): Fragment {
+        return when(position) {
+            0 -> ProjectFragment()
+            1 -> SearchFragment()
+            else -> ProfileFragment()
+        }
+    }
+}
+```
+**WelcomeActivity.kt**
+```
+class WelcomeActivity : AppCompatActivity() {
+    private val welcomeViewModel: WelcomeViewModel by viewModels()
+    private lateinit var binding: ActivityWelcomeBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityWelcomeBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
+        binding.welcomeViewModel = welcomeViewModel
+        binding.lifecycleOwner = this
+
+        val mainViewPagerAdapter = MainViewPagerAdapter(this)
+        binding.vpFragmentSlider.apply {
+            adapter = mainViewPagerAdapter
+            registerOnPageChangeCallback(PageChangeCallBack())
+        }
+    }
+}
+
+```
+
+- **BottomNavigation**
+SetOnNavigationItemSelectedListener와 PagerChangeCallback을 활용하여 Bottom Nav의 탭을 누르면 ViewPager2의 페이지가 뜰 수 있게
+```
+class WelcomeActivity : AppCompatActivity() {
+    private val welcomeViewModel: WelcomeViewModel by viewModels()
+    private lateinit var binding: ActivityWelcomeBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityWelcomeBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
+        binding.welcomeViewModel = welcomeViewModel
+        binding.lifecycleOwner = this
+
+        val mainViewPagerAdapter = MainViewPagerAdapter(this)
+        binding.vpFragmentSlider.apply {
+            adapter = mainViewPagerAdapter
+            registerOnPageChangeCallback(PageChangeCallBack())
+        }
+        binding.welcomeBottomnav.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.main_project -> binding.vpFragmentSlider.currentItem = 0
+                R.id.main_search -> binding.vpFragmentSlider.currentItem = 1
+                R.id.main_proile -> binding.vpFragmentSlider.currentItem = 2
+            }
+            true
+        }
+    }
+    // ViewPager2의 PagerChangeCallback(바텀 네비의 선택된 탭에 맞춰서 페이징함)
+    private inner class PageChangeCallBack : ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+            binding.welcomeBottomnav.selectedItemId = when (position) {
+                0 -> R.id.main_project
+                1 -> R.id.main_search
+                2 -> R.id.main_proile
+                else -> throw IllegalAccessException("No Such Position")
+            }
+        }
+    }
+}
+```
+
+- **Tab Layout**
+검색 기능 구현을 위해 검색화면 구현, 아래 다른 검색 기능을 두기 위해 TabLayout 설치, addOnTabSelectedListener를 활용하여 ViewPager에 걸린 Fragment를 페이징
+
+**SearchFragment.kt**
+```
+class SearchFragment : Fragment() {
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val binding: FragmentSearchBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
+        val mainViewPagerAdapter = SearchViewPagerAdapter(childFragmentManager)
+        binding.vpSearchSlider.adapter = mainViewPagerAdapter
+        binding.tabSearch.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                binding.vpSearchSlider.setCurrentItem(tab?.position!!)
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+
+            }
+
+        })
+        return binding.root
+    }
+}
 ```
