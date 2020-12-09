@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/img_project"
+        android:layout_width="150dp"
+        android:layout_height="0dp"
+        android:contentDescription="OUNCE"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText"
+        tools:src="@drawable/android_siba" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="@+id/img_project"
+        app:layout_constraintStart_toStartOf="@+id/img_project"
+        app:layout_constraintTop_toBottomOf="@id/img_project">
+
+        <TextView
+            android:id="@+id/txt_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="OUNCE" />
+
+        <TextView
+            android:id="@+id/txt_explain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            tools:text="온스(OUNCE)는 제가 참여했던 26기 SOPT APP-JAM에서 제작한 어플리케이션입니다.
+            저는 민구형과 주예랑 함께 안드로이드 개발 파트에서 작업을 했습니다." />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
