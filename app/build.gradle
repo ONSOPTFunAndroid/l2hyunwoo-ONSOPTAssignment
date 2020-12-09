@@ -21,6 +21,11 @@ android {
         jvmTarget = "1.8"
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     viewBinding {
         enabled = true
     }
@@ -68,4 +73,11 @@ dependencies {
 
     //Fragment-KTX
     implementation "androidx.fragment:fragment-ktx:1.2.5"
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+
+    // AndroidX Security - EncryptedSharedPreferences
+    implementation "androidx.security:security-crypto:1.0.0-rc03"
 }

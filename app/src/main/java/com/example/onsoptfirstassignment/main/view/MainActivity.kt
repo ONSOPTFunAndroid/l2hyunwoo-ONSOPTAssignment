@@ -3,25 +3,30 @@ package com.example.onsoptfirstassignment.main.view
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import com.example.onsoptfirstassignment.data.RetrofitServiceImpl
 import com.example.onsoptfirstassignment.databinding.ActivityMainBinding
 import com.example.onsoptfirstassignment.detail.view.WelcomeActivity
+import com.example.onsoptfirstassignment.main.repository.SignInRepository
 import com.example.onsoptfirstassignment.main.viewmodel.MainViewModel
+import com.example.onsoptfirstassignment.main.viewmodel.MainViewModelFactory
 import com.example.onsoptfirstassignment.preference.LoginPreference
 import com.example.onsoptfirstassignment.signup.view.SignUpActivity
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val activityViewModel: MainViewModel by viewModels()
+    private lateinit var activityViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-
+        initViewModel()
         binding.mainViewModel = activityViewModel
         binding.lifecycleOwner = this
 
@@ -32,6 +37,14 @@ class MainActivity : AppCompatActivity() {
         activityViewModel.isSignIn.observe(this, {
             signInButtonClickListener(it)
         })
+    }
+
+    private fun initViewModel() {
+        activityViewModel = ViewModelProvider(
+            this, MainViewModelFactory(
+                SignInRepository(RetrofitServiceImpl.getSignUpInstance())
+            )
+        ).get(MainViewModel::class.java)
     }
 
     private fun signInButtonClickListener(isSignIn: Boolean) {
@@ -49,13 +62,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loginProcess() {
-        if (activityViewModel.isMatch()) {
-            activityViewModel.setAutoLoginInfo()
-            "로그인 성공".toast()
-            transferActivity(WelcomeActivity::class.java)
-            finish()
-        } else {
-            "회원정보가 잘못되었습니다 다시 하세요".toast()
+        CoroutineScope(Dispatchers.Main).launch {
+            if (activityViewModel.validateUserData()) {
+                activityViewModel.setAutoLoginInfo()
+                "로그인 성공".toast()
+                transferActivity(WelcomeActivity::class.java)
+                finish()
+            } else {
+                "회원정보가 잘못되었습니다 다시 하세요".toast()
+            }
         }
     }
 
@@ -68,9 +83,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loginStart() {
-        if (!isAutoRegister()) {
+        //if (!isAutoRegister()) {
             registerCheck()
-        }
+        //}
     }
 
     private fun isAutoRegister(): Boolean {

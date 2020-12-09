@@ -1,12 +1,20 @@
 package com.example.onsoptfirstassignment.main.viewmodel
 
+import android.util.Log
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.onsoptfirstassignment.main.model.RequestSignIn
+import com.example.onsoptfirstassignment.main.repository.SignInRepository
 import com.example.onsoptfirstassignment.preference.LoginPreference
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
-class MainViewModel : ViewModel() {
+class MainViewModel(
+    private val repository: SignInRepository
+) : ViewModel() {
 
     private val _userId = MutableLiveData<String>()
     val userId: LiveData<String>
@@ -64,6 +72,17 @@ class MainViewModel : ViewModel() {
 
     fun setAutoLoginInfo() {
         LoginPreference.myIsLogin = true
+    }
+
+    suspend fun validateUserData() : Boolean {
+        val validationData = viewModelScope.async {
+            repository.signIn(RequestSignIn(
+                email = editId.get()!!,
+                password = editPassword.get()!!
+            ))
+        }.await()
+        Log.d("log user data", "${validationData}")
+        return validationData.success
     }
 
     companion object {

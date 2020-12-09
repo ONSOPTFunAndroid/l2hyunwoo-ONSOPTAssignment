@@ -4,18 +4,22 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import com.example.onsoptfirstassignment.data.RetrofitServiceImpl
 import com.example.onsoptfirstassignment.databinding.ActivitySignUpBinding
+import com.example.onsoptfirstassignment.signup.repository.SignUpRepository
 import com.example.onsoptfirstassignment.signup.viewmodel.SignUpViewModel
+import com.example.onsoptfirstassignment.signup.viewmodel.SignUpViewModelFactory
 import kotlinx.android.synthetic.main.activity_sign_up.*
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
-    private val signUpViewModel: SignUpViewModel by viewModels()
+    private lateinit var signUpViewModel: SignUpViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initViewModel()
         binding = ActivitySignUpBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
@@ -24,11 +28,19 @@ class SignUpActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
 
         signUpViewModel.isRegisterButtonClicked.observe(this, {
-            if(it) {
+            if (it) {
                 registerProcess()
                 signUpViewModel.isButtonClickedSetFalse()
             }
         })
+    }
+
+    private fun initViewModel() {
+        signUpViewModel = ViewModelProvider(
+            this, SignUpViewModelFactory(
+                SignUpRepository(RetrofitServiceImpl.getSignUpInstance())
+            )
+        ).get(SignUpViewModel::class.java)
     }
 
     private fun sendDataToLoginActivity() {
@@ -40,8 +52,9 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun registerProcess() {
-        if(signUpViewModel.editTextBlankCheck()) {
+        if (signUpViewModel.editTextBlankCheck()) {
             signUpViewModel.setUserInfoInSharedPreference()
+            signUpViewModel.sendDataToServer()
             "회원가입 성공".toast()
             sendDataToLoginActivity()
         } else {
