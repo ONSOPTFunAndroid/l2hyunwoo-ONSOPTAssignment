@@ -7,12 +7,16 @@ ON SOPT 안드로이드 파트 필수/성장 과제 Repository입니다.
 ## What Did You Use?
 
 - Constraint/LinearLayout
-- ViewModel
-- LiveData
-- Data Binding
+- MVVM Pattern
+    - ViewModel
+    - LiveData
+    - Data Binding
 - SharedPreference
 - RecyclerView
 - ViewPager2
+- EncryptedSharedPreference
+- Coroutine
+- Retrofit2
 
 ## 1주차 과제
 
@@ -22,7 +26,7 @@ ON SOPT 안드로이드 파트 필수/성장 과제 Repository입니다.
 
 ### 화면 캡쳐
 
-| <img src="https://user-images.githubusercontent.com/54518925/96276106-8829eb80-100d-11eb-8b71-b6c5e0c6e1a5.png" width = "30%"/> | <img src="https://user-images.githubusercontent.com/54518925/96276117-8c560900-100d-11eb-9003-85cebc833385.png" width = "30%"/> |<img src="https://user-images.githubusercontent.com/54518925/96276120-8cee9f80-100d-11eb-9a3e-7a5f880ec386.png" width = "30%"/> |<img src="https://user-images.githubusercontent.com/54518925/96276123-8cee9f80-100d-11eb-94aa-1f57f5f9a083.png" width = "30%"/> | <img src="https://user-images.githubusercontent.com/54518925/96276125-8d873600-100d-11eb-89d4-58ade0a280de.png" width = "30%"/> | <img src="https://user-images.githubusercontent.com/54518925/96276127-8e1fcc80-100d-11eb-8da4-6887b66af16a.png" width = "30%"/> | <img src="hhttps://user-images.githubusercontent.com/54518925/96276129-8e1fcc80-100d-11eb-8f3e-8d2c2d1bc93a.png" width = "30%"/>
+<img src="https://user-images.githubusercontent.com/54518925/96276106-8829eb80-100d-11eb-8b71-b6c5e0c6e1a5.png" width = "30%"/> | <img src="https://user-images.githubusercontent.com/54518925/96276117-8c560900-100d-11eb-9003-85cebc833385.png" width = "30%"/> |<img src="https://user-images.githubusercontent.com/54518925/96276120-8cee9f80-100d-11eb-9a3e-7a5f880ec386.png" width = "30%"/> |<img src="https://user-images.githubusercontent.com/54518925/96276123-8cee9f80-100d-11eb-94aa-1f57f5f9a083.png" width = "30%"/> | <img src="https://user-images.githubusercontent.com/54518925/96276125-8d873600-100d-11eb-89d4-58ade0a280de.png" width = "30%"/> | <img src="https://user-images.githubusercontent.com/54518925/96276127-8e1fcc80-100d-11eb-8da4-6887b66af16a.png" width = "30%"/> | <img src="hhttps://user-images.githubusercontent.com/54518925/96276129-8e1fcc80-100d-11eb-8f3e-8d2c2d1bc93a.png" width = "30%"/>
 
 ### 주요 코드
 
@@ -450,3 +454,58 @@ class SearchFragment : Fragment() {
     }
 }
 ```
+
+## 6주차 필수 과제
+<img src ="https://user-images.githubusercontent.com/54518925/101647664-574dbc00-3a7c-11eb-83f4-73d1cd48d122.png" width = 40% />
+<img src ="https://user-images.githubusercontent.com/54518925/101647673-59177f80-3a7c-11eb-91f5-a5e531f17d2b.png" width = 40%  />
+
+### 주요 코드
+
+**Repository Pattern(MVVM Architecture) & Coroutine**
+
+- SignUpRepository
+
+```
+class SignUpRepository(
+    private val retrofitService: RetrofitService
+) {
+    suspend fun signUp(requestSignUp: RequestSignUp) = retrofitService.postSignUpUser(requestSignUp)
+}
+```
+
+- MainViewModel에서 validation 과정
+
+```
+suspend fun validateUserData() : Boolean {
+        val validationData = viewModelScope.async {
+            repository.signIn(RequestSignIn(
+                email = editId.get()!!,
+                password = editPassword.get()!!
+            ))
+        }.await()
+        Log.d("log user data", "${validationData}")
+        return validationData.success
+}
+```
+
+- MainActivity
+
+```
+private fun loginProcess() {
+        CoroutineScope(Dispatchers.Main).launch {
+            if (activityViewModel.validateUserData()) {
+                activityViewModel.setAutoLoginInfo()
+                "로그인 성공".toast()
+                transferActivity(WelcomeActivity::class.java)
+                finish()
+            } else {
+                "회원정보가 잘못되었습니다 다시 하세요".toast()
+            }
+        }
+}
+```
+
+코루틴을 사용함으로써, 비동기 처리를 자동으로 해줘 enqueue와 같은 BoilerPlate 코드를 줄일 수 있음
+viewModelScope, CoroutineScope로 원하는 Dispatcher에서 함수를 실행시키면서 Main 스레드를 블로킹시키지 않고 결과값을 받아낼때까지 지연시킬 수 있음
+
+
