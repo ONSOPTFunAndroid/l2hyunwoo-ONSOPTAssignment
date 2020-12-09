@@ -456,8 +456,8 @@ class SearchFragment : Fragment() {
 ```
 
 ## 6주차 필수 과제
-<img src ="https://user-images.githubusercontent.com/54518925/101647664-574dbc00-3a7c-11eb-83f4-73d1cd48d122.png" width = 40% />
-<img src ="https://user-images.githubusercontent.com/54518925/101647673-59177f80-3a7c-11eb-91f5-a5e531f17d2b.png" width = 40%  />
+<img src ="https://user-images.githubusercontent.com/54518925/101647664-574dbc00-3a7c-11eb-83f4-73d1cd48d122.png" />
+<img src ="https://user-images.githubusercontent.com/54518925/101647673-59177f80-3a7c-11eb-91f5-a5e531f17d2b.png"  />
 
 ### 주요 코드
 
